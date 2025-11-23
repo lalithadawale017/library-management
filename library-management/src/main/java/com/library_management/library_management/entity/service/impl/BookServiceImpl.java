@@ -1,13 +1,13 @@
-package service.impl;
+package com.library_management.library_management.entity.service.impl;
 
-import entity.Book;
-import exception.ResourceNotFoundException;
+import com.library_management.library_management.entity.Book;
+import com.library_management.library_management.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import repository.BookRepository;
-import service.BookService;
+import com.library_management.library_management.repository.BookRepository;
+import com.library_management.library_management.entity.service.BookService;
 
 import java.util.List;
 

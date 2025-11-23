@@ -1,12 +1,12 @@
-package controller;
+package com.library_management.library_management.controller;
 
-import entity.Book;
+import com.library_management.library_management.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import service.BookService;
+import com.library_management.library_management.entity.service.BookService;
 
 import java.util.List;
 

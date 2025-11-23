@@ -1,4 +1,4 @@
-package exception;
+package com.library_management.library_management.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

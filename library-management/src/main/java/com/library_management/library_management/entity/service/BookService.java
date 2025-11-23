@@ -1,6 +1,6 @@
-package service;
+package com.library_management.library_management.entity.service;
 
-import entity.Book;
+import com.library_management.library_management.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
