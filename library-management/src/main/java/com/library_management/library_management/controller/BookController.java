@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-import com.library_management.library_management.entity.service.BookService;
+import com.library_management.library_management.service.BookService;
 
 import java.util.List;
 
