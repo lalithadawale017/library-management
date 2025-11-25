@@ -3,10 +3,11 @@ pipeline {
 
     environment {
         JAVA_HOME = "C:/Users/DELL/.jdks/ms-17.0.16"
-        PATH = "${JAVA_HOME}/bin;${env.PATH}" // Windows uses ; as separator
+        PATH = "${JAVA_HOME}/bin;${env.PATH}"
     }
 
     stages {
+
         stage('Build') {
             steps {
                 echo 'Building the project...'
@@ -14,26 +15,27 @@ pipeline {
             }
         }
 
-     stage('Deploy') {
-         steps {
-             echo 'Stopping any old Spring Boot process on port 8081 (if exists)...'
-             // Safely kill old process if exists, continue if none
-             bat '''
-             @echo off
-             set PORT=8082
-             set FOUND=0
-             for /F "tokens=5" %%a in ('netstat -aon ^| findstr :%PORT% ^| findstr LISTENING') do (
-                 echo Killing old process %%a on port %PORT%
-                 taskkill /PID %%a /F
-                 set FOUND=1
-             )
-             if %FOUND%==0 (
-                 echo No process found on port %PORT%, continuing...
-             )
-             '''
+        stage('Deploy') {
+            steps {
+                echo 'Stopping any old Spring Boot process on port 8082 (if exists)...'
+                bat '''
+                @echo off
+                set PORT=8082
+                set FOUND=0
+                for /F "tokens=5" %%a in ('netstat -aon ^| findstr :%PORT% ^| findstr LISTENING') do (
+                    echo Killing old process %%a on port %PORT%
+                    taskkill /PID %%a /F
+                    set FOUND=1
+                )
+                if %FOUND%==0 (
+                    echo No process found on port %PORT%, continuing...
+                )
+                '''
 
-             echo 'Starting new Spring Boot application...'
-             bat 'start "" java -jar target\\library-management-0.0.1-SNAPSHOT.jar'
-         }
-     }
-}}
+                echo 'Starting new Spring Boot application on port 8082...'
+                bat 'start "" java -jar target\\library-management-0.0.1-SNAPSHOT.jar --server.port=8082'
+            }
+        }
+
+    }
+}
