@@ -36,4 +36,4 @@ pipeline {
              bat 'start "" java -jar target\\library-management-0.0.1-SNAPSHOT.jar'
          }
      }
-}
+}}
