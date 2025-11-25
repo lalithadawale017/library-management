@@ -15,30 +15,37 @@ pipeline {
                 bat 'mvn clean package -DskipTests'
             }
         }
+stage('Deploy') {
+    steps {
+        echo "Stopping application running on port ${APP_PORT}..."
 
-        stage('Deploy') {
-            steps {
-                echo "Stopping application running on port ${APP_PORT}..."
+        bat """
+        @echo off
+        set PORT=${APP_PORT}
 
-                // Kill process running on port
-                bat """
-                @echo off
-                set PORT=${APP_PORT}
-                for /F "tokens=5" %%p in ('netstat -aon ^| findstr :%PORT% ^| findstr LISTENING') do (
-                    echo Found process %%p on port %PORT%. Killing it...
-                    taskkill /F /PID %%p
-                )
-                """
+        echo Checking for process on port %PORT%...
 
-                echo "Starting Spring Boot application..."
+        for /F "tokens=5" %%p in ('netstat -ano ^| findstr :%PORT% ^| findstr LISTENING') do (
+            echo Killing process %%p on port %PORT%...
+            taskkill /F /PID %%p >nul 2>&1
+        )
 
-                // Start application with logs
-                bat """
-                cd "%WORKSPACE%"
-                echo Starting app from %WORKSPACE%
-                start "LibraryApp" cmd /c "java -jar target\\library-management-0.0.1-SNAPSHOT.jar --server.port=${APP_PORT} > app.log 2>&1"
-                """
-            }
-        }
+        echo Process check complete.
+        exit /B 0
+        """
+
+        echo "Starting Spring Boot application..."
+
+        bat """
+        @echo off
+        cd "%WORKSPACE%"
+        echo Starting app from %WORKSPACE%
+
+        start "LibraryApp" cmd /c "java -jar target\\library-management-0.0.1-SNAPSHOT.jar --server.port=${APP_PORT} > app.log 2>&1"
+
+        exit /B 0
+        """
     }
+  }
+ }
 }
