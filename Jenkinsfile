@@ -20,7 +20,7 @@ pipeline {
              // Safely kill old process if exists, continue if none
              bat '''
              @echo off
-             set PORT=8081
+             set PORT=8082
              set FOUND=0
              for /F "tokens=5" %%a in ('netstat -aon ^| findstr :%PORT% ^| findstr LISTENING') do (
                  echo Killing old process %%a on port %PORT%
