@@ -1,56 +1,50 @@
 pipeline {
     agent any
 
-    // Tools configured in Jenkins -> Manage Jenkins -> Global Tool Configuration
-    tools {
-        maven 'maven3'   // Name of Maven installation in Jenkins
-        jdk 'jdk17'      // Name of JDK installation in Jenkins
-    }
-
     environment {
-        // Optional: set environment variables
-        MVN_HOME = "${tool 'maven3'}"
-        JAVA_HOME = "${tool 'jdk17'}"
-        PATH = "${env.MVN_HOME}\\bin;${env.JAVA_HOME}\\bin;${env.PATH}"
+        APP_PORT = '8081'
+        JAR_FILE = 'target\\library-management-0.0.1-SNAPSHOT.jar'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Cloning repository...'
-                checkout scm
+                echo 'Checking out code from GitHub...'
+                git branch: 'main', url: 'https://github.com/lalithadawale017/library-management.git'
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Running Maven Build...'
-                // Windows uses 'bat' instead of 'sh'
-                bat 'mvn clean install'
+                echo 'Building project with Maven...'
+                bat 'mvn clean package'
             }
         }
 
-        stage('Test') {
+        stage('Deploy') {
             steps {
-                echo 'Running Unit Tests...'
-                bat 'mvn test'
-            }
-        }
+                echo 'Deploying application...'
+                bat """
+                :: Stop old application if running
+                for /f "tokens=5" %%a in ('netstat -aon ^| findstr :%APP_PORT% ^| findstr LISTENING') do (
+                    echo Killing old process %%a on port %APP_PORT%
+                    taskkill /PID %%a /F
+                )
 
-        stage('Package') {
-            steps {
-                echo 'Packaging project...'
-                bat 'mvn package'
+                :: Start new application
+                echo Starting new Spring Boot application...
+                start "" java -jar %JAR_FILE%
+                """
             }
         }
     }
 
     post {
         success {
-            echo 'Build succeeded!'
+            echo 'Build and deployment finished successfully!'
         }
         failure {
-            echo 'Build failed!'
+            echo 'Something went wrong. Check the logs.'
         }
     }
 }
