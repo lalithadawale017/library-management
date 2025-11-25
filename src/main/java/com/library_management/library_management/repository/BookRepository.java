@@ -11,5 +11,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByTitleContainingIgnoreCase(String title);//adding comment to check Ci/cd
     List<Book> findByAuthorContainingIgnoreCase(String author);
-    List<Book> findByCategoryContainingIgnoreCase(String category);
+    List<Book> findByCategoryContainingIgnoreCase(String category);//hello lallit
 }
